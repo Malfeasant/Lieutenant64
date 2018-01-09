@@ -4,12 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>C64 Console</title>
-  <!-- need some css... -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/2.3.7/mini-default.css">
+  <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/2.3.7/mini-default-min.css"-->
   <script src="console.js"></script>
 </head>
-<body>
-  <div>
-    <canvas id="canv">Get out of here with your obsolete browser.</canvas>
+<body onload="init()">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-2 col-lg-2">Some options/menu</div>
+      <div class="col-sm-12 col-md-8 col-lg-8 row">
+        <canvas id="canv" class="col-sm-12">Get out of here with your obsolete browser.</canvas>
+        <div class="col-sm-12">
+          <p>Keyboard</p>
+          <p>I'd prefer this to be hidden by default, but be able to slide it up...</p>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-2 col-lg-2">Some other options</div>
+    </div>
   </div>
 </body>
 </html>
