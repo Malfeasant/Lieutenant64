@@ -9,17 +9,29 @@
   <script src="console.js"></script>
 </head>
 <body onload="init()">
+  <header>
+    <label for="drawer-left" class="button drawer-toggle"></label>
+    <label for="drawer-right" class="button drawer-toggle">How do I put this on the right side?</label>
+  </header>
   <div class="container">
     <div class="row">
-      <div class="col-sm-12 col-md-2 col-lg-2">Some options/menu</div>
-      <div class="col-sm-12 col-md-8 col-lg-8 row">
+      <input type="checkbox" id="drawer-left">
+      <div class="drawer col-md-2">
+        <label for="drawer-left" class="close"></label>
+        Some options/menu
+      </div>
+      <div class="col-sm-12 col-md-8 row">
         <canvas id="canv" class="col-sm-12">Get out of here with your obsolete browser.</canvas>
-        <div class="col-sm-12">
+        <div id=keyboard class="col-sm-12 hidden-sm">
           <p>Keyboard</p>
           <p>I'd prefer this to be hidden by default, but be able to slide it up...</p>
         </div>
       </div>
-      <div class="col-sm-12 col-md-2 col-lg-2">Some other options</div>
+      <input type="checkbox" id="drawer-right">
+      <div class="drawer right col-md-2">
+        <label for="drawer-right" class="close"></label>
+        Some other options
+      </div>
     </div>
   </div>
 </body>
