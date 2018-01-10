@@ -4,29 +4,30 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>C64 Console</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/2.3.7/mini-default.css">
-  <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/2.3.7/mini-default-min.css"-->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <script src="console.js"></script>
 </head>
 <body onload="init()">
-  <header>
-    <label for="drawer-left" class="button drawer-toggle"></label>
-  </header>
-  <div class="container">
-    <div class="row">
-      <input type="checkbox" id="drawer-left">
-      <div class="drawer col-md-2">
-        <label for="drawer-left" class="close"></label>
-        Some options/menu
-      </div>
-      <div class="col-sm-12 col-md-8 row">
-        <canvas id="canv" class="col-sm-12">Get out of here with your obsolete browser.</canvas>
-        <div id=keyboard class="col-sm-12 hidden-sm">
-          <p>Keyboard</p>
-          <p>I'd prefer this to be hidden by default, but be able to slide it up...</p>
-        </div>
-      </div>
-    </div>
+  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="leftMenu">
+    <button onclick="closeLeftMenu()" class="w3-bar-item w3-button">Close &times;</button>
+    <!-- Some controls go here -->
+  </div>
+
+  <div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;" id="rightMenu">
+    <button onclick="closeRightMenu()" class="w3-bar-item w3-button">Close &times;</button>
+    <!-- More controls go here -->
+  </div>
+  <div>
+    <button class="w3-button w3-left" onclick="openLeftMenu()">&#9776;</button>
+    <button class="w3-button w3-right" onclick="openRightMenu()">&#9776;</button>
+    <div class="w3-container"></div>
+  </div>
+
+  <div class="row">
+    <canvas id="canv" class="w3-col">Get out of here with your obsolete browser.</canvas>
+  </div>
+
+
   </div>
 </body>
 </html>
