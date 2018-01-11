@@ -9,7 +9,7 @@
   <script src="console.js"></script>
 </head>
 <body onload="init()">
-  
+
   <header class="w3-bar w3-blue-grey">
     <div class="w3-dropdown-hover">
       <button class="w3-button w3-blue-grey">Machine Options</button>
@@ -33,12 +33,9 @@
   </div>
 
   <footer class="w3-bar w3-blue-grey w3-container w3-center">
-    <!--div class="w3-col"-->
-      <button class="w3-bar-block w3-button" onclick="pause()"><i class="fa fa-pause"></i></button>
-      <button class="w3-bar-block w3-button" onclick="step()"><i class="fa fa-step-forward"></i></button>
-      <button class="w3-bar-block w3-button" onclick="run()"><i class="fa fa-play"></i></button>
-      <button class="w3-bar-block w3-button" onclick="fast()"><i class="fa fa-forward"></i></button>
-    <!--/div-->
+    <button class="w3-bar-block w3-button" onclick="step()"><i class="fa fa-step-forward"></i></button>
+    <button class="w3-bar-block w3-button" onclick="run()"><i class="fa fa-play"></i></button>
+    <button class="w3-bar-block w3-button" onclick="run();speedFast()"><i class="fa fa-forward"></i></button>
   </footer>
 
 </body>

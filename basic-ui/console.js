@@ -32,3 +32,31 @@ function openRightMenu() {
 function closeRightMenu() {
   document.getElementById("rightMenu").style.display = "none";
 }
+
+function speedYawn() {
+
+}
+
+function speedSlow() {
+
+}
+
+function speedNormal() {
+
+}
+
+function speedFast() {
+
+}
+
+function pause() {
+
+}
+
+function step() {
+
+}
+
+function run() {
+  
+}
