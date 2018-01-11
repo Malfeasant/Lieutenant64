@@ -1,6 +1,14 @@
 var canvas;
+var worker;
 
 function init() {
+  if (typeof(Worker) !== "undefined") {
+    if (typeof(worker) == "undefined") {
+      worker = new Worker("../worker/main.js");
+    }
+  } else {
+    die("Sorry, your browser does not support web workers, which are required.");
+  }
   canvas = document.getElementById('canv');
   var context = canvas.getContext('2d');
   canvas.width = "384";
@@ -33,6 +41,17 @@ function closeRightMenu() {
   document.getElementById("rightMenu").style.display = "none";
 }
 
+function die(message) {
+  if (typeof(message) === 'string') {
+    alert(message);
+  }
+  window.addEventListener('error', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }, false);
+  throw '';
+}
+
 function speedYawn() {
 
 }
@@ -58,5 +77,5 @@ function step() {
 }
 
 function run() {
-  
+
 }
