@@ -5,45 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>C64 Console</title>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="console.js"></script>
 </head>
 <body onload="init()">
-  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="leftMenu">
-    <button onclick="closeLeftMenu()" class="w3-bar-item w3-button">
-      <span class="w3-left">&times;</span>
-      <span class="w3-right">Machine Options</span>
-    </button>
-    <!-- Some controls go here -->
-  </div>
-
-  <div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0;" id="rightMenu">
-    <button onclick="closeRightMenu()" class="w3-bar-item w3-button">
-      <span class="w3-left">Speed Control</span>
-      <span class="w3-right">&times;</span>
-    </button>
-    <div class="w3-dropdown-hover w3-right">
-      <button class="w3-bar-item w3-button">Speed</button>
-      <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0;">
-        <button class="w3-bar-item w3-button">Fast</button>
-        <button class="w3-bar-item w3-button">Normal</button>
-        <button class="w3-bar-item w3-button">Slow</button>
+  
+  <header class="w3-bar w3-blue-grey">
+    <div class="w3-dropdown-hover">
+      <button class="w3-button w3-blue-grey">Machine Options</button>
+      <div class="w3-dropdown-content w3-bar-block w3-border">
+        <button class="w3-bar-item w3-button">Palette</button>
       </div>
     </div>
-    <button class="w3-bar-item w3-button" onclick="togglePause()">Pause/Resume</button>
-    <button class="w3-bar-item w3-button" onclick="step()" id="enableStep">Step</button>
-    <!-- More controls go here -->
-  </div>
-  <div class="w3-bar w3-light-grey w3-opacity-max w3-hover-opacity" style="position: fixed; top: 0px;">
-    <button class="w3-bar-item w3-button w3-left" onclick="openLeftMenu()">&#9776;</button>
-    <button class="w3-bar-item w3-button w3-right" onclick="openRightMenu()">&#9776;</button>
-    <!--div class="w3-container"></div-->
-  </div>
+    <div class="w3-dropdown-hover">
+      <button class="w3-button w3-blue-grey">Speed</button>
+      <div class="w3-dropdown-content w3-bar-block w3-border">
+        <button class="w3-bar-item w3-button" onclick="speedYawn()">Super Slow (CPU Cycle)</button>
+        <button class="w3-bar-item w3-button" onclick="speedSlow()">Slow (Video Line)</button>
+        <button class="w3-bar-item w3-button" onclick="speedNormal()">Normal (Video Frame)</button>
+        <button class="w3-bar-item w3-button" onclick="speedFast()">Fast (Unrestrained)</button>
+      </div>
+    </div>
+  </header>
 
   <div class="row">
     <canvas id="canv" class="w3-col">Get out of here with your obsolete browser.</canvas>
   </div>
 
+  <footer class="w3-bar w3-blue-grey w3-container w3-center">
+    <!--div class="w3-col"-->
+      <button class="w3-bar-block w3-button" onclick="pause()"><i class="fa fa-pause"></i></button>
+      <button class="w3-bar-block w3-button" onclick="step()"><i class="fa fa-step-forward"></i></button>
+      <button class="w3-bar-block w3-button" onclick="run()"><i class="fa fa-play"></i></button>
+      <button class="w3-bar-block w3-button" onclick="fast()"><i class="fa fa-forward"></i></button>
+    <!--/div-->
+  </footer>
 
-  </div>
 </body>
 </html>
