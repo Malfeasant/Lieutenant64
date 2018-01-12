@@ -5,6 +5,7 @@ function init() {
   if (typeof(Worker) !== "undefined") {
     if (typeof(worker) == "undefined") {
       worker = new Worker("../worker/main.js");
+      worker.onmessage = fromWorker;
     }
   } else {
     die("Sorry, your browser does not support web workers, which are required.");
@@ -25,22 +26,6 @@ function resizeCanvas() {
   canvas.style.height = (canvas.clientWidth * .75) + 'px';
 }
 
-function openLeftMenu() {
-  document.getElementById("leftMenu").style.display = "block";
-}
-
-function closeLeftMenu() {
-  document.getElementById("leftMenu").style.display = "none";
-}
-
-function openRightMenu() {
-  document.getElementById("rightMenu").style.display = "block";
-}
-
-function closeRightMenu() {
-  document.getElementById("rightMenu").style.display = "none";
-}
-
 function die(message) {
   if (typeof(message) === 'string') {
     alert(message);
@@ -52,30 +37,40 @@ function die(message) {
   throw '';
 }
 
-function speedYawn() {
+// Process a message from the worker process- for simplicity, only strings
+// Video output will be strings of value 0-f representing a pixel color,
+// \n for hsync, \f for vsync
+function fromWorker(event) {
+  for (var i=0; i < event.data.length; i++) {
+    var ch = event.data.charAt(i);
+    // do something with it...
+  }
+}
 
+function speedYawn() {
+  worker.postMessage("Yawn...\n");
 }
 
 function speedSlow() {
-
+  worker.postMessage("Slow...\n");
 }
 
 function speedNormal() {
-
+  worker.postMessage("Normal...\n");
 }
 
 function speedFast() {
-
+  worker.postMessage("Fast...\n");
 }
 
 function pause() {
-
+  worker.postMessage("Pause...\n");
 }
 
 function step() {
-
+  worker.postMessage("Step...\n");
 }
 
 function run() {
-
+  worker.postMessage("Run...\n");
 }
