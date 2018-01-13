@@ -1,5 +1,9 @@
 var canvas;
+var context;
 var worker;
+var lastRequested;
+var framesRequested=0;
+var imageData;
 
 function init() {
   if (typeof(Worker) !== "undefined") {
@@ -11,15 +15,33 @@ function init() {
     die("Sorry, your browser does not support web workers, which are required.");
   }
   canvas = document.getElementById('canv');
-  var context = canvas.getContext('2d');
   canvas.width = "384";
   canvas.height = "216";
+  context = canvas.getContext('2d');
   context.fillStyle = "#3f7fff";
   context.fillRect(0,0,canvas.width,canvas.height);
   context.fillStyle = "#0000ff";
   context.fillRect(4*8,1*8,40*8,25*8);
+  worker.postMessage({ imageData: context.createImageData(canvas.width,canvas.height) });
   window.addEventListener('resize', resizeCanvas, false);
   resizeCanvas();
+  requestAnimationFrame(request);
+}
+
+function request(now) {
+  if (imageData) {
+    context.putImageData(imageData, 0, 0);
+  }
+  worker.postMessage({ runFor: "frame" });
+  framesRequested++;
+  if (framesRequested >= 60) {
+    if (lastRequested) {
+      console.log("Sent " + framesRequested + " frames in " + (now - lastRequested) + " milliseconds.");
+    }
+    framesRequested=0;
+    lastRequested = now;
+  }
+  requestAnimationFrame(request);
 }
 
 function resizeCanvas() {
@@ -37,13 +59,11 @@ function die(message) {
   throw '';
 }
 
-// Process a message from the worker process- for simplicity, only strings
-// Video output will be strings of value 0-f representing a pixel color,
-// \n for hsync, \f for vsync
-function fromWorker(event) {
-  for (var i=0; i < event.data.length; i++) {
-    var ch = event.data.charAt(i);
-    // do something with it...
+// Process a message from the worker process-
+// Video output will be an ImageData object
+function fromWorker(message) {
+  if (message.data.imageData) {
+    imageData = message.data.imageData;
   }
 }
 
