@@ -1,9 +1,14 @@
 var canvas;
 var context;
 var worker;
-var lastRequested;
-var framesRequested=0;
 var imageData;
+var speed = "Normal"; // TODO: accept a parameter to allow starting at different speeds
+var paused = false;
+var lastFrameTime;
+var cycleMillis = 11/11250; // TODO: this will be different for PAL
+var cyclesPerLine = 65;
+var linesPerFrame = 263;
+// TODO: a config object that encompasses all these options
 
 function init() {
   if (typeof(Worker) !== "undefined") {
@@ -18,30 +23,33 @@ function init() {
   canvas.width = "384";
   canvas.height = "216";
   context = canvas.getContext('2d');
+  /*
+  // Test pattern is no longer needed, but will keep it here in case something breaks
   context.fillStyle = "#3f7fff";
   context.fillRect(0,0,canvas.width,canvas.height);
   context.fillStyle = "#0000ff";
   context.fillRect(4*8,1*8,40*8,25*8);
+  */
+  // Give the worker a buffer to fill
   worker.postMessage({ imageData: context.createImageData(canvas.width,canvas.height) });
   window.addEventListener('resize', resizeCanvas, false);
   resizeCanvas();
-  requestAnimationFrame(request);
+  requestAnimationFrame(showFrame);
 }
 
-function request(now) {
+// Intended to be called by requestAnimationFrame- renders data passed from worker,
+// decides how much more work needs to be done.
+function showFrame(now) {
   if (imageData) {
     context.putImageData(imageData, 0, 0);
   }
-  worker.postMessage({ runFor: "frame" });
-  framesRequested++;
-  if (framesRequested >= 60) {
-    if (lastRequested) {
-      console.log("Sent " + framesRequested + " frames in " + (now - lastRequested) + " milliseconds.");
-    }
-    framesRequested=0;
-    lastRequested = now;
+  if (!paused) {
+    if (speed == "Normal") {
+      worker.postMessage({ runFor: Math.floor((now - lastFrameTime) / cycleMillis) });
+    } else doWork();
   }
-  requestAnimationFrame(request);
+  lastFrameTime = now;
+  requestAnimationFrame(showFrame);
 }
 
 function resizeCanvas() {
@@ -65,32 +73,46 @@ function fromWorker(message) {
   if (message.data.imageData) {
     imageData = message.data.imageData;
   }
-}
-
-function speedYawn() {
-  worker.postMessage("Yawn...\n");
+  if (!paused && speed == "Fast") worker.postMessage({ runTo: "Frame" });
 }
 
 function speedSlow() {
-  worker.postMessage("Slow...\n");
+  speed = "Slow";
 }
 
 function speedNormal() {
-  worker.postMessage("Normal...\n");
+  speed = "Normal";
 }
 
 function speedFast() {
-  worker.postMessage("Fast...\n");
-}
-
-function pause() {
-  worker.postMessage("Pause...\n");
+  speed = "Fast";
+  run();
 }
 
 function step() {
-  worker.postMessage("Step...\n");
+  if (paused) {
+    doWork();
+  } else {
+    paused = true;
+  }
+}
+
+function doWork() {
+  switch (speed) {
+    case "Slow":
+      worker.postMessage({ runFor: 1 });
+      break;
+    case "Normal":
+      worker.postMessage({ runTo: "Line"});
+      break;
+    case "Fast":
+      worker.postMessage({ runTo: "Frame"});
+      break;
+    default:
+      die("Unexpected speed: " + speed);
+  }
 }
 
 function run() {
-  worker.postMessage("Run...\n");
+  paused = false;
 }

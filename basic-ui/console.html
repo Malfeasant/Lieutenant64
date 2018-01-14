@@ -20,10 +20,9 @@
     <div class="w3-dropdown-hover">
       <button class="w3-button w3-blue-grey">Speed</button>
       <div class="w3-dropdown-content w3-bar-block w3-border">
-        <button class="w3-bar-item w3-button" onclick="speedYawn()">Super Slow (CPU Cycle)</button>
-        <button class="w3-bar-item w3-button" onclick="speedSlow()">Slow (Video Line)</button>
-        <button class="w3-bar-item w3-button" onclick="speedNormal()">Normal (Video Frame)</button>
-        <button class="w3-bar-item w3-button" onclick="speedFast()">Fast (Unrestrained)</button>
+        <button class="w3-bar-item w3-button" onclick="speedSlow()">Slow</button>
+        <button class="w3-bar-item w3-button" onclick="speedNormal()">Normal</button>
+        <button class="w3-bar-item w3-button" onclick="speedFast()">Fast</button>
       </div>
     </div>
   </header>
@@ -35,7 +34,7 @@
   <footer class="w3-bar w3-blue-grey w3-container w3-center">
     <button class="w3-bar-block w3-button" onclick="step()"><i class="fa fa-step-forward"></i></button>
     <button class="w3-bar-block w3-button" onclick="run()"><i class="fa fa-play"></i></button>
-    <button class="w3-bar-block w3-button" onclick="run();speedFast()"><i class="fa fa-forward"></i></button>
+    <button class="w3-bar-block w3-button" onclick="speedFast()"><i class="fa fa-forward"></i></button>
   </footer>
 
 </body>
