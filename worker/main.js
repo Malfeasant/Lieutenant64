@@ -24,15 +24,17 @@ var palette = [ // Thanks to http://www.pepto.de/projects/colorvic/
 
 // Receive a message from the UI
 onmessage = function(message) {
-//  console.log("Received message: %o", message.data);
+  var cycles = 0;
   if (message.data.runFor) {
-    //console.log("Requested " + message.data.runFor + " cycles");
     for (var cycle = 0; cycle < message.data.runFor; cycle++) {
       doCycle();
+      cycles++;
     }
     done();
   } else if (message.data.runTo) {
-    while (!doCycle(message.data.runTo)) {}
+    do {
+      cycles++;
+    } while (!doCycle(message.data.runTo));
     done();
   } else if (message.data.imageData && !imageData) {
     imageData = message.data.imageData;
@@ -41,6 +43,7 @@ onmessage = function(message) {
   }
   call++;
   if (call > 0xf) call = 0;
+  return { cycles: cycles };  // TODO: track frames too?
 };
 
 // pass "Line" or "Frame", then will return true if this is the last cycle of one.
