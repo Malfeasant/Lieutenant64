@@ -42,6 +42,7 @@ function init() {
 function showFrame(now) {
   if (imageData) {
     context.putImageData(imageData, 0, 0);
+    imageData=null; // so if no new frames come in, we don't waste time rendering the old one
   }
   if (!paused) {
     if (speed == "Normal") {
