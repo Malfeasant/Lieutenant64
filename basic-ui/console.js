@@ -87,7 +87,6 @@ function speedNormal() {
 
 function speedFast() {
   speed = "Fast";
-  run();
 }
 
 function step() {
@@ -115,5 +114,6 @@ function doWork() {
 }
 
 function run() {
+  speed = "Normal";
   paused = false;
 }
