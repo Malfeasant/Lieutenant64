@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="console.js"></script>
 </head>
-<body onload="init()">
+<body onload="Lieutenant64.Console.init()">
 
   <header class="w3-bar w3-blue-grey">
     <div class="w3-dropdown-hover">
@@ -20,9 +20,9 @@
     <div class="w3-dropdown-hover">
       <button class="w3-button w3-blue-grey">Speed</button>
       <div class="w3-dropdown-content w3-bar-block w3-border">
-        <button class="w3-bar-item w3-button" onclick="speedSlow()">Slow</button>
-        <button class="w3-bar-item w3-button" onclick="speedNormal()">Normal</button>
-        <button class="w3-bar-item w3-button" onclick="speedFast()">Fast</button>
+        <button class="w3-bar-item w3-button" onclick="Lieutenant64.Console.setSpeed('Slow')">Slow</button>
+        <button class="w3-bar-item w3-button" onclick="Lieutenant64.Console.setSpeed('Normal')">Normal</button>
+        <button class="w3-bar-item w3-button" onclick="Lieutenant64.Console.setSpeed('Fast')">Fast</button>
       </div>
     </div>
   </header>
@@ -32,9 +32,13 @@
   </div>
 
   <footer class="w3-bar w3-blue-grey w3-container w3-center">
-    <button class="w3-bar-block w3-button" onclick="step()"><i class="fa fa-step-forward"></i></button>
-    <button class="w3-bar-block w3-button" onclick="run()"><i class="fa fa-play"></i></button>
-    <button class="w3-bar-block w3-button" onclick="run();speedFast()"><i class="fa fa-forward"></i></button>
+    <button class="w3-bar-block w3-button" onclick="Lieutenant64.Console.step()">
+      <i class="fa fa-step-forward"></i></button>
+    <button class="w3-bar-block w3-button" onclick="Lieutenant64.Console.run()">
+      <i class="fa fa-play"></i></button>
+    <button class="w3-bar-block w3-button"
+      onclick="Lieutenant64.Console.run();Lieutenant64.Console.setSpeed('Fast')">
+      <i class="fa fa-forward"></i></button>
   </footer>
 
 </body>

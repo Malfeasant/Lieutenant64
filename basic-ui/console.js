@@ -1,3 +1,6 @@
+var Lieutenant64 = window.Lieutenant64 || {};
+Lieutenant64.Console = (function() {
+
 var canvas;
 var context;
 var worker;
@@ -77,16 +80,8 @@ function fromWorker(message) {
   if (!paused && speed == "Fast") worker.postMessage({ runTo: "Frame" });
 }
 
-function speedSlow() {
-  speed = "Slow";
-}
-
-function speedNormal() {
-  speed = "Normal";
-}
-
-function speedFast() {
-  speed = "Fast";
+function setSpeed(sp) {
+  speed = sp;
 }
 
 function step() {
@@ -117,3 +112,6 @@ function run() {
   speed = "Normal";
   paused = false;
 }
+
+  return { init: init, run: run, step: step, setSpeed };
+})();
