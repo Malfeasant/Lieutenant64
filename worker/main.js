@@ -30,12 +30,12 @@ onmessage = function(message) {
       doCycle();
       cycles++;
     }
-    done();
+    done(cycles);
   } else if (message.data.runTo) {
     do {
       cycles++;
     } while (!doCycle(message.data.runTo));
-    done();
+    done(cycles);
   } else if (message.data.imageData && !imageData) {
     imageData = message.data.imageData;
   } else {
@@ -43,7 +43,6 @@ onmessage = function(message) {
   }
   call++;
   if (call > 0xf) call = 0;
-  return { cycles: cycles };  // TODO: track frames too?
 };
 
 // pass "Line" or "Frame", then will return true if this is the last cycle of one.
@@ -64,7 +63,7 @@ function doCycle(matchWhat) {
     }
   }
   cycle++;
-  if (cycle >= 48) {
+  if (cycle >= 48) {  // TODO: more cycles & lines that don't produce pixels
     match |= matchWhat == "Line";
     cycle=0;
     line++;
@@ -77,8 +76,8 @@ function doCycle(matchWhat) {
   return match;
 }
 
-function done() {
+function done(cycles) {
   if (imageData) {
-    postMessage({ imageData: imageData });
+    postMessage({ imageData: imageData, cycles: cycles });
   }
 }

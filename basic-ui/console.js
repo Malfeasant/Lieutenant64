@@ -5,10 +5,21 @@ var canvas;
 var context;
 var worker;
 var imageData;
-var speed = "Normal"; // TODO: accept a parameter to allow starting at different speeds
-var paused = false;
-var lastFrameTime;
-var cycleMillis = 11/11250; // TODO: this will be different for PAL
+/* Accepted values: Paused(wait for click, run to next stepSize),
+                    Slow(run stepSize steps n times per sec),
+                    Realtime(track cycles per sec & adjust),
+                    Frenzy(run continuously without limit) */
+var runMode = "Realtime"; // TODO: accept a parameter to allow starting at different speeds
+/* Cycle, Line, Frame- obvious for pause/slow, but also affects granularity of
+   Realtime & Frenzy */
+var stepSize = "Line";
+var cycles = 0;
+var time;
+var adjust = 0;
+var cycleTime = {
+  millis: 11,
+  cycles: 11250
+}; // TODO: this will be different for PAL
 var cyclesPerLine = 65;
 var linesPerFrame = 263;
 // TODO: a config object that encompasses all these options
@@ -37,7 +48,7 @@ function init() {
   worker.postMessage({ imageData: context.createImageData(canvas.width,canvas.height) });
   window.addEventListener('resize', resizeCanvas, false);
   resizeCanvas();
-  requestAnimationFrame(showFrame);
+  if (runMode !== "Paused") doWork();
 }
 
 // Intended to be called by requestAnimationFrame- renders data passed from worker,
@@ -45,20 +56,72 @@ function init() {
 function showFrame(now) {
   if (imageData) {
     context.putImageData(imageData, 0, 0);
-    imageData=null; // so if no new frames come in, we don't waste time rendering the old one
+    imageData=null; // to signal that the frame has been rendered
   }
-  if (!paused) {
-    if (speed == "Normal") {
-      worker.postMessage({ runFor: Math.floor((now - lastFrameTime) / cycleMillis) });
-    } else doWork();
+  if (runMode == "Realtime") {
+    if (time) {
+      var elapsed = now - time;
+      while (cycles > cycleTime.cycles) {
+        cycles -= cycleTime.cycles;
+        elapsed -= cycleTime.millis;
+        adjust = elapsed;
+      }
+    }
+    time = now;
   }
-  lastFrameTime = now;
-  requestAnimationFrame(showFrame);
 }
 
 function resizeCanvas() {
   canvas.style.height = (canvas.clientWidth * .75) + 'px';
 }
+
+// Process a message from the worker process-
+// Video output will be an ImageData object
+function fromWorker(message) {
+  if (message.data.imageData) {
+    /* possible to receive multiple imageData objects per AnimationFrame-
+       have to check for it, otherwise requests will stack up */
+    var newImage = imageData ? false : true;
+    imageData = message.data.imageData;
+    if (newImage) requestAnimationFrame(showFrame); // if not, frame has already been requested
+    if (runMode == "Frenzy") doWork();  // run another stepSize immediately
+    if (runMode == "Realtime") {
+      
+    }
+    cycles += message.data.cycles;
+  }
+}
+
+function setStep(s) {
+  stepSize = s;
+}
+
+function setMode(m) {
+  runMode = m;
+}
+
+function step() {
+  if (runMode == "Paused") {
+    doWork();
+  } else {
+    runMode = "Paused";
+  }
+}
+
+function doWork() {
+  switch (stepSize) {
+    case "Cycle":
+    case "Line":
+    case "Frame":
+      worker.postMessage({ runTo: runMode});
+      break;
+    default:
+      die("Unexpected speed: " + speed);
+  }
+}
+
+  return { init: init, step: step, setMode: setMode, setStep: setStep };
+})();
 
 function die(message) {
   if (typeof(message) === 'string') {
@@ -70,48 +133,3 @@ function die(message) {
   }, false);
   throw '';
 }
-
-// Process a message from the worker process-
-// Video output will be an ImageData object
-function fromWorker(message) {
-  if (message.data.imageData) {
-    imageData = message.data.imageData;
-  }
-  if (!paused && speed == "Fast") worker.postMessage({ runTo: "Frame" });
-}
-
-function setSpeed(sp) {
-  speed = sp;
-}
-
-function step() {
-  if (paused) {
-    doWork();
-  } else {
-    paused = true;
-  }
-}
-
-function doWork() {
-  switch (speed) {
-    case "Slow":
-      worker.postMessage({ runFor: 1 });
-      break;
-    case "Normal":
-      worker.postMessage({ runTo: "Line"});
-      break;
-    case "Fast":
-      worker.postMessage({ runTo: "Frame"});
-      break;
-    default:
-      die("Unexpected speed: " + speed);
-  }
-}
-
-function run() {
-  speed = "Normal";
-  paused = false;
-}
-
-  return { init: init, run: run, step: step, setSpeed };
-})();
