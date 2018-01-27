@@ -18,3 +18,15 @@ function init() {
   pageBits.context.fillStyle = "#0000ff";
   pageBits.context.fillRect(4*8,1*8,40*8,25*8);
 }
+
+function step() {
+
+}
+
+function play() {
+
+}
+
+function ffwd() {
+
+}
