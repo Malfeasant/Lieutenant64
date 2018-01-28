@@ -50,7 +50,7 @@ var control = (function() {
     if (imageData && exports.showImage) exports.showImage(imageData);
     doWork();
     requestAnimationFrame(doFrame);
-    if (timing.elapsed > 5000) {
+    if (timing.elapsed > 10000) {
       console.log("Ran " + timing.cycles + " cycles in " + timing.elapsed + " milliseconds.");
       console.log("  that's " + 1000 * timing.cycles / timing.elapsed + " cycles per second.")
       timing.cycles = 0;
