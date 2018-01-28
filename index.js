@@ -20,6 +20,7 @@ function init() {
   control.showImage = function (imageData) {
     context.putImageData(imageData, -16, -16);  // TODO: adjust
   }
+  control.throttle = { cycles: 11250, millis: 11 }; // TODO: PAL option
 }
 
 function fatalError(message) {
