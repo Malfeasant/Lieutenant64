@@ -22,18 +22,6 @@ function init() {
   }
 }
 
-function step() {
-  control.step();
-}
-
-function play() {
-  control.play();
-}
-
-function fast() {
-  control.fast();
-}
-
 function fatalError(message) {
   if (typeof(message) === 'string') {
     alert(message);

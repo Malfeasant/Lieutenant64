@@ -1,5 +1,11 @@
 var control = (function() {
   var imageData;
+  var worker;
+  if (typeof(Worker) !== "undefined") {
+    worker = new Worker("worker/main.js")
+  } else {
+    fatalError("Web Workers are required.")
+  }
 
   var mode;
 
@@ -30,13 +36,10 @@ var control = (function() {
     millis: 0,
     lastFrame: null
   };
-  function doCycle() {
-    perf.cycles++;
-  }
 
   function doFrame(timeNow) {
     if (perf.lastFrame) {
-      millis += timeNow - perf.lastFrame;
+      perf.millis += timeNow - perf.lastFrame;
     }
     perf.lastFrame = timeNow;
     if (imageData && exports.showImage) exports.showImage(imageData);
