@@ -1,12 +1,21 @@
+var imageData;
+
 onmessage = function(message) {
   if (message.data.cycles) {
     doCycles(message.data.cycles);
+  } else if (message.data.reset) {
+    imageData = message.data.reset.imageData;
+    // any other reset stuff
   }
 }
 
-function doCycles(cycles) {
-  for (var i = 0; i < cycles; i++) {
+var cycle = 0;
+var line = 0;
 
+function doCycles(cycles) {
+  while (cycles > 0) {
+    // run a cycle on each module...
+    cycles--;
   }
-  postMessage({ imageData: null });
+  postMessage({ imageData: imageData });
 }

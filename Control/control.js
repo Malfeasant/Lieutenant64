@@ -80,6 +80,11 @@ var control = (function() {
     if (mode == "Fast") doWork(); // request more
   }
 
-  var exports = { step: step, play: play, fast: fast };
+  function reset(imageData) {
+    worker.postMessage({ reset: { imageData: imageData }});
+    // any other reset stuff...
+  }
+
+  var exports = { step: step, play: play, fast: fast, reset: reset };
   return exports;
 })();
