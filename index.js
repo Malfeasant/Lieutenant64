@@ -18,10 +18,10 @@ function init() {
   context.fillRect(4*8,1*8,40*8,25*8);
 
   control.showImage = function (imageData) {
-    context.putImageData(imageData, 0, 0);
+    context.putImageData(imageData, -12, -23);
   }
   control.throttle = { cycles: 11250, millis: 11 }; // TODO: PAL option
-  control.reset(context.createImageData(canvas.width,canvas.height));
+  control.reset(context.createImageData(canvas.width+16,canvas.height+32));
 }
 
 function fatalError(message) {

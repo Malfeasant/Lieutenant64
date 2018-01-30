@@ -1,12 +1,28 @@
 var vic = (function() {
 
-  var cycle = 0;
-  var line = 0;
-
   var border = {
+    h: false,
+    v: false,
+    ybottom: 251, // 247
+    ytop: 51  // 55
+  };
+
+  var den = true;
+
+  var raster = {
+    cycle: 0,
+    line: 0
+  };
+
+  var sync = {
     h: false,
     v: false
   };
+
+  var blank = {
+    h: false,
+    v: false
+  }
 
   var borderColor = 14;
   var backColor = 6;
@@ -19,24 +35,92 @@ var vic = (function() {
   // returns a string of 8 characters- 0-f represent color nybbles, empty for
   // blank, or h/v for sync
   function doCycle() {
-    cycle++;
-    if (cycle > 65) { // TODO: get this from config
-      cycle = 0; line++;
-      if (line > 263) { // TODO: line increment is not in obvious place
-        line = 0;
-        return "v";
-      }
-      return "h";
-    }
+    raster.cycle++;
     var bar = "";
-    if (cycle < 13 || cycle > 60) return bar; // TODO: adjust as needed
-    if (line < 43 || line > 258) return bar;
-    for (var x = cycle * 8; x < cycle * 8 + 8; x++) {
-      if (x == 24 /* && CSEL */) border.h = false;
-      if (x == 343 /* && CSEL */) border.h = true;
-      if (line == 51 /* && RSEL */) border.v = false;
-      if (line == 250 /* && RSEL */) border.v = true;
-      if (border.h || border.v) {
+    for (var x = raster.cycle * 8; x < raster.cycle * 8 + 8; x++) {
+      switch (x) {
+        case 416:
+          sync.h = true;
+          break;
+        case 452:
+          sync.h = false;
+          break;
+        case 396:
+          blank.h = true;
+          break;
+        case 496:
+          blank.h = false;
+          break;
+        case 35:
+          // if !csel
+          //border.h = false;
+          //if (raster.line == ybottom) border.v = true;
+          break;
+        case 339:
+          // if !csel
+          //border.h = true;
+          break;
+        case 28:
+          // if csel
+          border.h = false;
+          if (raster.line == border.ybottom) border.v = true;
+          if (raster.line == border.ytop && den) border.v = false;
+          break;
+        case 348:
+          // if csel
+          border.h = true;
+          break;
+        case 412: // actually anywhere between 404 and 412
+          raster.line++;
+          break;
+        case 12:
+          // enable character fetch
+          break;
+        case 332:
+          // disable character fetch
+          // disable ba for char fetch
+          break;
+        case 496:
+          // ba for char fetch
+          break;
+        case 336:
+          // ba for sprite 0
+          break;
+        case 376:
+          // end ba for sprite 0
+          break;
+        case 519:
+          raster.cycle = 0;
+          switch (raster.line) {
+            case border.ybottom:
+              border.v = true;
+              break;
+            case border.ytop:
+              border.v = !den;
+              break;
+            case 262:
+              raster.line = 0;
+              break;
+            case 17:
+              sync.v = true;
+              break;
+            case 20:
+              sync.v = false;
+              break;
+            default:
+
+          }
+          break;
+        default:
+          // nothing
+      }
+      if (sync.v) {
+        bar += "v";
+      } else if (sync.h) {
+        bar += "h";
+      } else if (blank.h || blank.v) {
+        bar += " ";
+      } else if (border.h || border.v) {
         bar += borderColor.toString(16);
       } else {
         bar += backColor.toString(16);  // TODO: real stuff

@@ -76,8 +76,8 @@ var control = (function() {
   function receive(message) {
     if (message.data.imageData) {
       imageData = message.data.imageData;
+      if (mode == "Fast") doWork(); // request more
     }
-    if (mode == "Fast") doWork(); // request more
   }
 
   function reset(imageData) {

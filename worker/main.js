@@ -16,8 +16,8 @@ onmessage = function(message) {
 }
 
 var videoOut = {
-  cycle: 0,
-  line: 0,
+  x: 0,
+  y: 0,
   calls: 0  // TODO: remove this, for debugging
 }
 
@@ -27,27 +27,28 @@ function doCycles(cycles) {
     // run a cycle on each module...
     vic.poke(0x21, cycles);
     var bar = vic.doCycle();
-    if (bar == "") {
-      // anything?
-    } else if (bar == "h") {
-      videoOut.cycle = 0;
-      videoOut.line++;
-    } else if (bar == "v") {
-      videoOut.cycle = 0;
-      videoOut.line = 0;
-    } else {
-      var offset = videoOut.line * 4 * imageData.width + videoOut.cycle * 8 * 4;
-      for (var i = 0; i < 8; i++) {
-        var ch = parseInt(bar.charAt(i), 16);
-        imageData.data[offset + i * 4 + 0] = palette[ch].red;
-        imageData.data[offset + i * 4 + 1] = palette[ch].green;
-        imageData.data[offset + i * 4 + 2] = palette[ch].blue;
-        imageData.data[offset + i * 4 + 3] = 0xff;  // alpha
+    if (bar.includes("v")) {
+      videoOut.y = 0;
+    } else if (bar.includes("h")) {
+      if (videoOut.x) { // so as not to increment repeatedly for single sync
+        videoOut.y++;
       }
-      videoOut.cycle++
+      videoOut.x = 0;
+    } else {
+      var offset = videoOut.y * 4 * imageData.width;
+//      console.log(bar);
+      for (var ch of bar) {
+        if (ch == " ") break;
+        ch = parseInt(ch, 16);
+        imageData.data[offset + videoOut.x * 4 + 0] = palette[ch].red;
+        imageData.data[offset + videoOut.x * 4 + 1] = palette[ch].green;
+        imageData.data[offset + videoOut.x * 4 + 2] = palette[ch].blue;
+        imageData.data[offset + videoOut.x * 4 + 3] = 0xff;  // alpha
+        videoOut.x++;
+      }
     }
     cycles--;
-    videoOut.calls++;
   }
+  videoOut.calls++;
   postMessage({ imageData: imageData });
 }
