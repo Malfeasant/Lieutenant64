@@ -36,7 +36,7 @@ function doCycles(cycles) {
       videoOut.cycle = 0;
       videoOut.line = 0;
     } else {
-      var offset = videoOut.line * 4 * 384 + videoOut.cycle * 8 * 4;
+      var offset = videoOut.line * 4 * imageData.width + videoOut.cycle * 8 * 4;
       for (var i = 0; i < 8; i++) {
         var ch = parseInt(bar.charAt(i), 16);
         imageData.data[offset + i * 4 + 0] = palette[ch].red;
